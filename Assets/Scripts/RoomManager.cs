@@ -16,7 +16,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     public bool DidTimeout { private set; get; }
     public static readonly RoomOptions s_RoomOptions = new RoomOptions
     {
-        MaxPlayers = 2,
+        MaxPlayers = 10,
         EmptyRoomTtl = 5,
         PublishUserId = true,
     };
