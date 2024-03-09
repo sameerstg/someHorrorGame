@@ -20,7 +20,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         EmptyRoomTtl = 5,
         PublishUserId = true,
     };
-
+    public string roomName;
     void Awake()
     {
         //Assert.AreEqual(1, FindObjectsOfType<RoomManager>().Length);
@@ -41,7 +41,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         debugText.text = "connecting to server";
         //RoomUIManager._instance.pingText.text = " ";
         Leave();
-        StartCoroutine(DoJoinOrCreateRoom("hello wordl"));
+        roomName = LobbyManager._instance.roomName;
+        StartCoroutine(DoJoinOrCreateRoom(roomName));
     }
     public void Leave()
     {
@@ -100,6 +101,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
 
 
+    public override void OnConnectedToMaster()
+    {
+        base.OnConnectedToMaster();
+        Debug.LogError("connected to master");
+    }
 
     IEnumerator DoJoinOrCreateRoom(string preferredRoomName)
     {

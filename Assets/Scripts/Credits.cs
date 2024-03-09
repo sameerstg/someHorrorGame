@@ -33,6 +33,6 @@ public class Credits : MonoBehaviour
     private void UpdateButtonText()
     {
         // Update the button text to show the current state
-        buttonText.text = isObjectEnabled ? "Disable Object" : "Enable Object";
+        //buttonText.text = isObjectEnabled ? "Disable Object" : "Enable Object";
     }
 }

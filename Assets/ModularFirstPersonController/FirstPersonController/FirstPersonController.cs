@@ -64,6 +64,7 @@ public class FirstPersonController : MonoBehaviour
 
     // Internal Variables
     private bool isWalking = false;
+    public Animator anim;
 
     #region Sprint
 
@@ -139,7 +140,7 @@ public class FirstPersonController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         pv = GetComponent<PhotonView>();
         crosshairObject = GetComponentInChildren<Image>();
-
+        //anim= GetComponentInChildren<Animator>();
         // Set internal variables
         playerCamera.fieldOfView = fov;
         originalScale = transform.localScale;
@@ -367,10 +368,23 @@ public class FirstPersonController : MonoBehaviour
             HeadBob();
         }
     }
-
+    [PunRPC]
+    public void AnimationRpc(Vector3 velocity)
+    {
+        if (velocity != Vector3.zero)
+        {
+            anim.SetBool("walking", true);
+        }
+        else
+        {
+            anim.SetBool("walking", false);
+        }
+    }
     void FixedUpdate()
     {
+        pv.RPC(nameof(AnimationRpc), RpcTarget.Others,rb.velocity);
         #region Movement
+
         if (!pv.IsMine) return;
 
         if (playerCanMove)
@@ -566,6 +580,7 @@ public class FirstPersonControllerEditor : Editor
         EditorGUILayout.Space();
 
         fpc.playerCamera = (Camera)EditorGUILayout.ObjectField(new GUIContent("Camera", "Camera attached to the controller."), fpc.playerCamera, typeof(Camera), true);
+        fpc.anim = (Animator)EditorGUILayout.ObjectField(new GUIContent("Animator", "Attach Animator"), fpc.anim, typeof(Animator), true);
         fpc.fov = EditorGUILayout.Slider(new GUIContent("Field of View", "The camera’s view angle. Changes the player camera directly."), fpc.fov, fpc.zoomFOV, 179f);
         fpc.cameraCanMove = EditorGUILayout.ToggleLeft(new GUIContent("Enable Camera Rotation", "Determines if the camera is allowed to move."), fpc.cameraCanMove);
 
